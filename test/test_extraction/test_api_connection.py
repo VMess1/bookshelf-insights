@@ -2,7 +2,12 @@ import json
 import unittest
 from unittest.mock import patch, MagicMock
 from io import StringIO
-from requests import HTTPError
+from requests import (
+    HTTPError,
+    ConnectionError,
+    Timeout,
+    RequestException
+)
 from src.extraction.utils.api_connection import get_book_by_isbn
 
 
@@ -59,7 +64,7 @@ class TestGetBookByISBN(unittest.TestCase):
         self.mock_response.status_code = 404
         self.mock_response.raise_for_status.side_effect = HTTPError(
             ("404 Client Error: Not Found for url: "
-             + " https://openlibrary.org/isbn/3.json")
+             + "https://openlibrary.org/isbn/3.json")
         )
         with patch('src.extraction.utils.api_connection.requests.get',
                    return_value=self.mock_response):
@@ -67,3 +72,47 @@ class TestGetBookByISBN(unittest.TestCase):
         self.assertEqual(result,
                          ("HTTP Error: 404 Client Error: Not Found"
                           + " for url: https://openlibrary.org/isbn/3.json"))
+
+    def test_connection_error_handling(self):
+        """
+        The get_book_by_isbn() should return a helpful message with
+        the specific error if a connection error occurs
+        """
+        self.mock_response.raise_for_status.side_effect = ConnectionError()
+        with patch('src.extraction.utils.api_connection.requests.get',
+                   return_value=self.mock_response):
+            result = get_book_by_isbn(12345)
+        self.assertEqual(result, "Error connecting: ")
+
+    def test_timeout_error_handling(self):
+        """
+        The get_book_by_isbn() should return a helpful message with
+        the specific error if a connection error occurs
+        """
+        self.mock_response.raise_for_status.side_effect = Timeout()
+        with patch('src.extraction.utils.api_connection.requests.get',
+                   return_value=self.mock_response):
+            result = get_book_by_isbn(12345)
+        self.assertEqual(result, "Timeout error: ")
+
+    def test_request_exception_error_handling(self):
+        """
+        The get_book_by_isbn() should return a helpful message with
+        the specific error if a request exception error occurs
+        """
+        self.mock_response.raise_for_status.side_effect = RequestException()
+        with patch('src.extraction.utils.api_connection.requests.get',
+                   return_value=self.mock_response):
+            result = get_book_by_isbn(12345)
+        self.assertEqual(result, "Request error: ")
+
+    def test_other_exception_error_handling(self):
+        """
+        The get_book_by_isbn() should return a helpful message if any
+        other type of error is encountered
+        """
+        self.mock_response.raise_for_status.side_effect = Exception()
+        with patch('src.extraction.utils.api_connection.requests.get',
+                   return_value=self.mock_response):
+            result = get_book_by_isbn(12345)
+        self.assertEqual(result, "An unexpected error occurred: ")
