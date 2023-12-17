@@ -1,0 +1,47 @@
+{
+    "kind": "books#volumes",
+    "items": [
+      {
+        "kind": "books#volume",
+        "id": "AZ5J6B1-4BoC",
+        "etag": "kIzQA7IUObk",
+        "selfLink": "https://www.googleapis.com/books/v1/volumes/AZ5J6B1-4BoC",
+        "volumeInfo": {
+          "title": "The Girl Who Kicked the Hornet's Nest",
+          "authors": [
+            "Stieg Larsson"
+          ],
+          "publisher": "Knopf",
+          "publishedDate": "2010-05-25"
+        }
+      },
+      {
+        "kind": "books#volume",
+        "id": "UvK1Slvkz3MC",
+        "etag": "otKmdbRgdFQ",
+        "selfLink": "https://www.googleapis.com/books/v1/volumes/UvK1Slvkz3MC",
+        "volumeInfo": {
+          "title": "The Girl who Played with Fire",
+          "authors": [
+            "Stieg Larsson"
+          ],
+          "publisher": "Knopf",
+          "publishedDate": "2009-07-28"
+        }
+      },
+      {
+        "kind": "books#volume",
+        "id": "OBM3AAAAIAAJ",
+        "etag": "xb47kTr8HsQ",
+        "selfLink": "https://www.googleapis.com/books/v1/volumes/OBM3AAAAIAAJ",
+        "volumeInfo": {
+          "title": "The Sign of Four",
+          "authors": [
+            "Sir Arthur Conan Doyle"
+          ],
+          "publishedDate": "1890"
+        }
+      }
+    ],
+    "totalItems": 3
+  }
