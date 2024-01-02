@@ -139,5 +139,4 @@ class TestGetBookshelfConnection(unittest.TestCase):
             result = get_bookshelf_connection()
 
         self.assertEqual(result, mock_bookshelf_data)
-
-    def test_returns_
+    
