@@ -53,3 +53,13 @@ def get_details(bookshelves):
             print(f"Publisher: {book_specifics["publisher"]}\n")
         except KeyError:
             print("No publisher recorded")
+
+
+def get_author_information(formatted_name):
+    url = ("https://openlibrary.org/search/authors.json?q="
+           + f"{formatted_name}")
+    response = requests.get(url)
+    data = response.json()
+    return data
+
+print(get_author_information('r%20f%20kuang'))

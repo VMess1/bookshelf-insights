@@ -8,7 +8,10 @@ from requests import (
     Timeout,
     RequestException
 )
-from src.extraction.utils.api_connection import get_book_by_isbn
+from src.extraction.utils.api_connection import (
+    get_book_by_isbn,
+    get_bookshelf_connection
+)
 
 
 def get_mock_OL_data():
@@ -21,13 +24,13 @@ def get_mock_OL_data():
         return json.load(file)
 
 
-def get_mock_google_response():
+def get_mock_google_bookshelf():
     """
     Mocking the response object from the Google Books API.
     The structure was taken from an example provided by the
     documentation.
     """
-    with open("test/test_extraction/mock_data/mock_api_data.json") as file:
+    with open("test/mock_data/mock_OL_data.json") as file:
         return json.load(file)
 
 
@@ -116,3 +119,25 @@ class TestGetBookByISBN(unittest.TestCase):
                    return_value=self.mock_response):
             result = get_book_by_isbn(12345)
         self.assertEqual(result, "An unexpected error occurred: ")
+
+
+class TestGetBookshelfConnection(unittest.TestCase):
+    def setUp(self):
+        self.mock_response = MagicMock()
+
+    def test_returns_correct_json_object(self):
+        """
+        The get_bookshelf_connection() connects to a specified bookshelf
+        on a users Google Books account. This function should return
+        a JSON object with details of the books on the specific shelf
+        """
+        mock_bookshelf_data = get_mock_google_bookshelf()
+        self.mock_response.status_code = 200
+        self.mock_response.json.return_value = mock_bookshelf_data
+        with patch('src.extraction.utils.api_connection.requests.get',
+                   return_value=self.mock_response):
+            result = get_bookshelf_connection()
+
+        self.assertEqual(result, mock_bookshelf_data)
+
+    def test_returns_
